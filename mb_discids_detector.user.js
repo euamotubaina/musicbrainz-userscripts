@@ -16,6 +16,7 @@
 // @require         http://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.js
 // @require         http://pajhome.org.uk/crypt/md5/sha1.js
 // @require         https://raw.githubusercontent.com/euamotubaina/musicbrainz-userscripts/master/lib/logger.js
+// @icon            https://raw.githubusercontent.com/euamotubaina/musicbrainz-userscripts/master/assets/images/Musicbrainz_import_logo.png
 // ==/UserScript==
 
 // prevent JQuery conflicts, see http://wiki.greasespot.net/@grant
