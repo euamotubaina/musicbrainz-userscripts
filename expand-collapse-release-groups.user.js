@@ -3,7 +3,7 @@
 // @description	  See what's inside a release group without having to follow its URL. Also adds convenient edit links for it.
 // @namespace     http://userscripts.org/users/266906
 // @author        Michael Wiencek <mwtuea@gmail.com>
-// @version       2022.1.6.1
+// @version       2024.5.25.1
 // @license       GPL
 // @downloadURL   https://raw.githubusercontent.com/euamotubaina/musicbrainz-userscripts/master/expand-collapse-release-groups.user.js
 // @updateURL     https://raw.githubusercontent.com/euamotubaina/musicbrainz-userscripts/master/expand-collapse-release-groups.user.js
