@@ -8,13 +8,13 @@
 // @downloadURL   https://raw.githubusercontent.com/euamotubaina/musicbrainz-userscripts/master/expand-collapse-release-groups.user.js
 // @updateURL     https://raw.githubusercontent.com/euamotubaina/musicbrainz-userscripts/master/expand-collapse-release-groups.user.js
 // @grant         none
-// @match         *://*musicbrainz.org/artist/*
-// @match         *://*musicbrainz.org/label/*
-// @match         *://*musicbrainz.org/release-group/*
-// @match         *://*musicbrainz.org/series/*
-// @exclude       *://**musicbrainz.org/label/*/*
-// @exclude       *://**musicbrainz.org/release-group/*/*
-// @exclude       *://**musicbrainz.org/series/*/*
+// @match         http*://*.musicbrainz.org/artist/*
+// @match         http*://*.musicbrainz.org/label/*
+// @match         http*://*.musicbrainz.org/release-group/*
+// @match         http*://*.musicbrainz.org/series/*
+// @exclude       http*://*.musicbrainz.org/label/*/*
+// @exclude       http*://*.musicbrainz.org/release-group/*/*
+// @exclude       http*://*.musicbrainz.org/series/*/*
 // @icon          https://raw.githubusercontent.com/euamotubaina/musicbrainz-userscripts/master/assets/images/Musicbrainz_import_logo.png
 // ==/UserScript==
 

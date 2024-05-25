@@ -6,7 +6,7 @@
 // @updateURL      https://raw.githubusercontent.com/euamotubaina/musicbrainz-userscripts/master/mb_ui_enhancements.user.js
 // @icon           http://wiki.musicbrainz.org/-/images/3/3d/Musicbrainz_logo.png
 // @namespace      http://userscripts.org/users/22504
-// @match          http*://*musicbrainz.org/*
+// @match          http*://*.musicbrainz.org/*
 // @require        http://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.js
 // @require        https://raw.githubusercontent.com/euamotubaina/mbediting.js/master/mbediting.js
 // @grant          GM_setValue
