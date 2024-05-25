@@ -3,8 +3,8 @@
 // @namespace      http://userscripts.org/users/22504
 // @version        2023.6.24.1
 // @description    Generate MusicBrainz DiscIds from online EAC logs, and check existence in MusicBrainz database.
-// @downloadURL    https://raw.githubusercontent.com/murdos/musicbrainz-userscripts/master/mb_discids_detector.user.js
-// @updateURL      https://raw.githubusercontent.com/murdos/musicbrainz-userscripts/master/mb_discids_detector.user.js
+// @downloadURL    https://raw.githubusercontent.com/euamotubaina/musicbrainz-userscripts/master/mb_discids_detector.user.js
+// @updateURL      https://raw.githubusercontent.com/euamotubaina/musicbrainz-userscripts/master/mb_discids_detector.user.js
 // @include        http://avaxhome.ws/music/*
 // @include        https://orpheus.network/torrents.php?id=*
 // @include        https://passtheheadphones.me/torrents.php?id=*
@@ -15,7 +15,7 @@
 // @include        https://notwhat.cd/torrents.php?id=*
 // @require        http://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.js
 // @require        http://pajhome.org.uk/crypt/md5/sha1.js
-// @require        lib/logger.js
+// @require        https://raw.githubusercontent.com/euamotubaina/musicbrainz-userscripts/master/lib/logger.js
 // ==/UserScript==
 
 // prevent JQuery conflicts, see http://wiki.greasespot.net/@grant
