@@ -5,8 +5,10 @@
 // @namespace      http://userscripts.org/users/22504
 // @downloadURL    https://raw.githubusercontent.com/euamotubaina/musicbrainz-userscripts/master/bandcamp_importer.user.js
 // @updateURL      https://raw.githubusercontent.com/euamotubaina/musicbrainz-userscripts/master/bandcamp_importer.user.js
-// @include        /^https?://[^/]+/(?:album|track)/[^/]+\/?$/
-// @include        /^https?://web\.archive\.org/web/\d+/https?://[^/]+/(?:album|track)/[^/]+\/?$/
+// @match          http*://*.bandcamp.com/album/*
+// @match          http*://*.bandcamp.com/track/*
+// @match          http*://web.archive.org/web/*/http*://*.bandcamp.com/album/*
+// @match          http*://web.archive.org/web/*/http*://*.bandcamp.com/track/*
 // @require        https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js
 // @require        https://raw.githubusercontent.com/euamotubaina/musicbrainz-userscripts/master/lib/mbimport.js
 // @require        https://raw.githubusercontent.com/euamotubaina/musicbrainz-userscripts/master/lib/logger.js
