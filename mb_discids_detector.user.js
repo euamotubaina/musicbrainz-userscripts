@@ -171,7 +171,7 @@ function gazellePageHandler() {
                             discs,
                             function (mb_toc_numbers, discid, discNumber) {
                                 targetContainer.append(
-                                    `<br /><strong>${
+                                    `<strong>${
                                         discs.length > 1 ? `Disc ${discNumber}: ` : ''
                                     }MB DiscId: </strong><span id="${torrentId}_disc${discNumber}" />`
                                 );
