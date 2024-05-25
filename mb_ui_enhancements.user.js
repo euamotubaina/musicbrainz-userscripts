@@ -20,19 +20,22 @@ $(document).ready(function () {
     // Follow the instructions found at https://www.last.fm/api/authentication
     // then paste your API Key between the single quotes in the variable below.
     const LASTFM_APIKEY = GM_getValue('LASTFM_APIKEY', null);
-	if (!LASTFM_APIKEY) GM_setValue('LASTFM_APIKEY', '')
+    if (!LASTFM_APIKEY) GM_setValue('LASTFM_APIKEY', '');
 
     // Highlight table rows
     $('head').append(
         '<style>table.tbl > tbody > tr:hover { background-color: #ffeea8 } table.tbl > tbody > tr:hover > td { background-color: rgba(0, 0, 0, 0) }</style>'
     );
 
+	// Move wikipedia to the bottom of the content
+	$('#content').append( $('.wikipedia-extract') );
+
     let re;
 
     // Top tracks from Last.fm
     re = new RegExp('musicbrainz.org/artist/([a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12})$', 'i');
     if (LASTFM_APIKEY && window.location.href.match(re)) {
-        $('h2.discography').before('<h2 class="toptracks">Top Last.fm recordings</h2><ul class="toptracks" />');
+        $('.wikipedia-extract').after('<h2 class="toptracks">Top Last.fm recordings</h2><ul class="toptracks" />');
         var mbid = window.location.href.match(re)[1];
         let toptracks = $.getJSON(
             `https://ws.audioscrobbler.com/2.0/?method=artist.gettoptracks&mbid=${mbid}&api_key=${LASTFM_APIKEY}&format=json`,
