@@ -9,6 +9,8 @@
 // @match          http*://*musicbrainz.org/*
 // @require        http://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.js
 // @require        https://raw.githubusercontent.com/euamotubaina/mbediting.js/master/mbediting.js
+// @grant          GM_setValue
+// @grant          GM_getValue
 // ==/UserScript==
 
 // prevent JQuery conflicts, see http://wiki.greasespot.net/@grant
@@ -17,7 +19,8 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 $(document).ready(function () {
     // Follow the instructions found at https://www.last.fm/api/authentication
     // then paste your API Key between the single quotes in the variable below.
-    LASTFM_APIKEY = '';
+    const LASTFM_APIKEY = GM_getValue('LASTFM_APIKEY', null);
+	if (!LASTFM_APIKEY) GM_setValue('LASTFM_APIKEY', '')
 
     // Highlight table rows
     $('head').append(
