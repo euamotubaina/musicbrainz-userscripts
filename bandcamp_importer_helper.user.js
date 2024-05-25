@@ -3,13 +3,13 @@
 // @description Add a link to Bandcamp's album canonical URL on pages without /album/, for one to import the release into MusicBrainz
 // @version     2022.4.10.1
 // @namespace   http://userscripts.org/users/22504
-// @downloadURL https://raw.github.com/murdos/musicbrainz-userscripts/master/bandcamp_importer_helper.user.js
-// @updateURL   https://raw.github.com/murdos/musicbrainz-userscripts/master/bandcamp_importer_helper.user.js
-// @include     http*://*.bandcamp.com/
-// @include     http*://*.bandcamp.com/releases
+// @downloadURL https://raw.githubusercontent.com/euamotubaina/musicbrainz-userscripts/master/bandcamp_importer_helper.user.js
+// @updateURL   https://raw.githubusercontent.com/euamotubaina/musicbrainz-userscripts/master/bandcamp_importer_helper.user.js
+// @match       http*://*.bandcamp.com/
+// @match       http*://*.bandcamp.com/releases
 // @exclude     http*://*.bandcamp.com/*/*
-// @require     lib/logger.js
-// @icon        https://raw.githubusercontent.com/murdos/musicbrainz-userscripts/master/assets/images/Musicbrainz_import_logo.png
+// @require     https://raw.githubusercontent.com/euamotubaina/musicbrainz-userscripts/master/lib/logger.js
+// @icon        https://raw.githubusercontent.com/euamotubaina/musicbrainz-userscripts/master/assets/images/Musicbrainz_import_logo.png
 // @grant       unsafeWindow
 // ==/UserScript==
 
