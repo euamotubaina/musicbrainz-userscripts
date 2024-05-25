@@ -3,16 +3,16 @@
 // @description    Add a button on Bandcamp's album pages to open MusicBrainz release editor with pre-filled data for the selected release
 // @version        2022.5.6.1
 // @namespace      http://userscripts.org/users/22504
-// @downloadURL    https://raw.github.com/murdos/musicbrainz-userscripts/master/bandcamp_importer.user.js
-// @updateURL      https://raw.github.com/murdos/musicbrainz-userscripts/master/bandcamp_importer.user.js
+// @downloadURL    https://raw.githubusercontent.com/euamotubaina/musicbrainz-userscripts/master/bandcamp_importer.user.js
+// @updateURL      https://raw.githubusercontent.com/euamotubaina/musicbrainz-userscripts/master/bandcamp_importer.user.js
 // @include        /^https?://[^/]+/(?:album|track)/[^/]+\/?$/
 // @include        /^https?://web\.archive\.org/web/\d+/https?://[^/]+/(?:album|track)/[^/]+\/?$/
 // @require        https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js
-// @require        lib/mbimport.js
-// @require        lib/logger.js
-// @require        lib/mblinks.js
-// @require        lib/mbimportstyle.js
-// @icon           https://raw.githubusercontent.com/murdos/musicbrainz-userscripts/master/assets/images/Musicbrainz_import_logo.png
+// @require        https://raw.githubusercontent.com/euamotubaina/musicbrainz-userscripts/master/lib/mbimport.js
+// @require        https://raw.githubusercontent.com/euamotubaina/musicbrainz-userscripts/master/lib/logger.js
+// @require        https://raw.githubusercontent.com/euamotubaina/musicbrainz-userscripts/master/lib/mblinks.js
+// @require        https://raw.githubusercontent.com/euamotubaina/musicbrainz-userscripts/master/lib/mbimportstyle.js
+// @icon           https://raw.githubusercontent.com/euamotubaina/musicbrainz-userscripts/master/assets/images/Musicbrainz_import_logo.png
 // @grant          unsafeWindow
 // @run-at         document-start
 // ==/UserScript==
