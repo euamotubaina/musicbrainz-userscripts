@@ -7,9 +7,9 @@
 // @updateURL      https://raw.githubusercontent.com/euamotubaina/musicbrainz-userscripts/master/deezer_importer.user.js
 // @match          http*://www.deezer.com/*/album/*
 // @require        https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js
-// @require        https://raw.githubusercontent.com/euamotubaina/lib/mbimport.js
-// @require        https://raw.githubusercontent.com/euamotubaina/lib/logger.js
-// @require        https://raw.githubusercontent.com/euamotubaina/lib/mbimportstyle.js
+// @require        https://raw.githubusercontent.com/euamotubaina/musicbrainz-userscripts/master/lib/mbimport.js
+// @require        https://raw.githubusercontent.com/euamotubaina/musicbrainz-userscripts/master/lib/logger.js
+// @require        https://raw.githubusercontent.com/euamotubaina/musicbrainz-userscripts/master/lib/mbimportstyle.js
 // @icon           https://raw.githubusercontent.com/euamotubaina/musicbrainz-userscripts/master/assets/images/Musicbrainz_import_logo.png
 // @grant          GM_xmlhttpRequest
 // @grant          GM.xmlHttpRequest
