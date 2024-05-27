@@ -5,7 +5,7 @@
 // @version        2024.5.27.1
 // @downloadURL    https://raw.githubusercontent.com/euamotubaina/musicbrainz-userscripts/master/deezer_importer.user.js
 // @updateURL      https://raw.githubusercontent.com/euamotubaina/musicbrainz-userscripts/master/deezer_importer.user.js
-// @match        http*://www.deezer.com/*/album/*
+// @match          http*://www.deezer.com/*/album/*
 // @require        https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js
 // @require        https://raw.githubusercontent.com/euamotubaina/lib/mbimport.js
 // @require        https://raw.githubusercontent.com/euamotubaina/lib/logger.js
