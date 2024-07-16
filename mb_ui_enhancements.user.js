@@ -8,7 +8,7 @@
 // @namespace      http://userscripts.org/users/22504
 // @match          http*://*.musicbrainz.org/*
 // @require        http://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.js
-// @require        https://raw.githubusercontent.com/euamotubaina/mbediting.js/master/mbediting.js
+// @require        https://raw.githubusercontent.com/murdos/mbediting.js/master/mbediting.js
 // @grant          GM_setValue
 // @grant          GM_getValue
 // ==/UserScript==
