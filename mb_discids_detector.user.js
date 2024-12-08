@@ -8,7 +8,7 @@
 // @match           http*://avaxhome.ws/music/*
 // @match           http*://orpheus.network/torrents.php?id=*
 // @match           http*://passtheheadphones.me/torrents.php?id=*
-// @match           http*://redacted.ch/torrents.php?id=*
+// @match           http*://redacted.sh/torrents.php?id=*
 // @match           http*://lztr.us/torrents.php?id=*
 // @match           http*://lztr.me/torrents.php?id=*
 // @match           http*://mutracker.org/torrents.php?id=*
