@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name        Import Bandcamp releases to MusicBrainz Album Link Helper
 // @description Add a link to Bandcamp's album canonical URL on pages without /album/, for one to import the release into MusicBrainz
-// @version     2024.5.25.1
-// @namespace   http://userscripts.org/users/22504
+// @version     2024-12-11
+// @namespace   https://github.com/euamotubaina/musicbrainz-userscripts
 // @downloadURL https://raw.githubusercontent.com/euamotubaina/musicbrainz-userscripts/master/bandcamp_importer_helper.user.js
 // @updateURL   https://raw.githubusercontent.com/euamotubaina/musicbrainz-userscripts/master/bandcamp_importer_helper.user.js
 // @match       http*://*.bandcamp.com/
