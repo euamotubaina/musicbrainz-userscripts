@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @name            Musicbrainz DiscIds Detector
+// @version         2024-12-15
 // @namespace       https://github.com/euamotubaina/musicbrainz-userscripts
-// @version         2024-12-11
 // @description     Generate MusicBrainz DiscIds from online EAC logs, and check existence in MusicBrainz database.
 // @downloadURL     https://raw.githubusercontent.com/euamotubaina/musicbrainz-userscripts/master/mb_discids_detector.user.js
 // @updateURL       https://raw.githubusercontent.com/euamotubaina/musicbrainz-userscripts/master/mb_discids_detector.user.js

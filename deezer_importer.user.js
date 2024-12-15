@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name           Import Deezer releases into MusicBrainz
-// @namespace      https://github.com/euamotubaina/musicbrainz-userscripts
 // @description    One-click importing of releases from deezer.com into MusicBrainz
-// @version        2024-12-11
+// @version        2024-12-15
+// @namespace      github.com/euamotubaina/musicbrainz-userscripts
 // @downloadURL    https://raw.githubusercontent.com/euamotubaina/musicbrainz-userscripts/master/deezer_importer.user.js
 // @updateURL      https://raw.githubusercontent.com/euamotubaina/musicbrainz-userscripts/master/deezer_importer.user.js
 // @match          http*://www.deezer.com/*/album/*
