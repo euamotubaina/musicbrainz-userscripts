@@ -1,6 +1,6 @@
 ﻿// ==UserScript==
 // @name            Musicbrainz DiscIds Detector
-// @version         2024-12-15
+// @version         2024-12-21
 // @namespace       https://github.com/euamotubaina/musicbrainz-userscripts
 // @description     Generate MusicBrainz DiscIds from online EAC logs, and check existence in MusicBrainz database.
 // @downloadURL     https://raw.githubusercontent.com/euamotubaina/musicbrainz-userscripts/master/mb_discids_detector.user.js
@@ -13,7 +13,7 @@
 // @match           http*://lztr.me/torrents.php?id=*
 // @match           http*://mutracker.org/torrents.php?id=*
 // @match           http*://notwhat.cd/torrents.php?id=*
-// @require         http://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.js
+// @require         https://code.jquery.com/jquery-3.7.1.min.js
 // @require         http://pajhome.org.uk/crypt/md5/sha1.js
 // @require         https://raw.githubusercontent.com/euamotubaina/musicbrainz-userscripts/master/lib/logger.js
 // @icon            https://raw.githubusercontent.com/euamotubaina/musicbrainz-userscripts/master/assets/images/Musicbrainz_import_logo.png
@@ -24,7 +24,7 @@ this.$ = this.jQuery = jQuery.noConflict(true);
 
 LOGGER.setLevel('info');
 
-var CHECK_IMAGE =
+const CHECK_IMAGE =
     'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/gD+AP7rGNSCAAAACXBIWXMAAABIAAAASABGyWs+AAAACXZwQWcAAAAQAAAAEABcxq3DAAADKklEQVQ4y32TS2hcZRiGn/8/Z87MNNc2zczEmptO0jSXagJtXCjWhhSEXpCI4EYENy6KG8FFBYtgEbzQ4k5QqNp2VyMtJVGpRU0tGDNoQxvrmCbkMslkSJrJXM6cOef8v4ukQqX4wbP5eL/327wv/M/Em+qNeFO9ASDEwzUPrM+fP8dqOhXqeGJ/f21ddCAYCsfRyFLJvru2mvnh9mTil8am1uJLQ8ceNOhoa+XC8HfMJm81x1q63glV179oBMLVhpQYEiQKzy0VNtZWLs9OT53s6X3qrxPHX+bSyNVNgyujV8lvrDXG2vZ/7oWig64nAY0hwZCCgIRwUGBJRSGbvp6cHH91R33078ODTyNOnXqPxcRl88ibX5wuBJuP5x2BVhop2PwuBA01kn2tJo4HtxfL5DIzZ7+/8MHrOx7tcMQ3I9dwnWKvF+kfTdlVEc/10f59A0HAgMEui90xgxvTLn8u+9SYhXUnNX60smr7z7Jx3wG8UOSZhUI4spJTrGwo0lssZxVSQlOdZGrJYyzpks4qlvLBWhWMHOgb7Mfsq4PfXOvx+bwgk/WxSwrfUwRNQSgAh7oCFB3N1xNllrMK04A5V7PLMOOvCSFMgFzJl6u2Jl8Gx9XkCppSWdEWNWiPGZy9XmIs6WJKKHuasq+p3qlkOwhz9B54dnbOkorOR0yG9gZJ3fP5cNTm4J4Akws+FyfKOK5GCFAatm/T4ObmB7RWxt74k9hrC0LVtLwwmw2FwyY8323hK2iLGnz2U4lMTiHvR04IGiqLxbrS7x/np3NJozoEmcTFTLTz2U7bivTcXNSsFxWHeyyGE2XGZ7x/j7WGyhA0W3e/LU58eiY1N+0IgLc++or1VLLb6hz6MmPGe/M2NFTBzIpH3lYoX6MQhC1NkzV/p2Jp5JX6eP+vn7wxsJnEXXUVnL6T59K7J/u2tR96365oey7nVQTKnsDzNFr5hETBq3ZmbrB47cS5M2+PdTbHmJpL89+OGbv3dLc81n/kWLih+yDhnTGtEcpeXXHSUz/OJ64M3/ojMS3BUw9rI2BsIUxBsLYyEJYC1nNuqawpARrwtwDgHxTwbTT5CxY9AAAALnpUWHRjcmVhdGUtZGF0ZQAAeNozMjCw0DWw0DUyCTEwsDIyszIw0jUwtTIwAABB3gURQfNnBAAAAC56VFh0bW9kaWZ5LWRhdGUAAHjaMzIwsNA1sNA1MggxNLMyNLYyNtM1MLUyMAAAQgUFF56jVzIAAAAASUVORK5CYII%3D';
 
 $(document).ready(function () {
@@ -169,27 +169,37 @@ function gazellePageHandler() {
                         LOGGER.debug('Log content', $(data).find('pre'));
                         let discs = analyze_log_files($(data).find('pre'));
                         LOGGER.debug('Number of disc found', discs.length);
+                        const mbIdsEl = $(`<div class="mbdiscid_${torrentId}"></div>`);
                         check_and_display_discs(
                             artistName,
                             releaseName,
                             discs,
                             function (mb_toc_numbers, discid, discNumber) {
-                                targetContainer.append(
-                                    `<strong>${
-                                        discs.length > 1 ? `Disc ${discNumber}: ` : ''
-                                    }MB DiscId: </strong><span id="${torrentId}_disc${discNumber}" />`
+                                mbIdsEl.append(
+                                    `${
+                                        discs.length > 1 ? `<strong>Disc ${discNumber}: </strong>` : ''
+                                    }<span id="${torrentId}_disc${discNumber}" />`
                                 );
                             },
                             function (mb_toc_numbers, discid, discNumber, found) {
-                                let url = computeAttachURL(mb_toc_numbers, artistName, releaseName);
-                                let html = `<a href="${url}">${discid}</a>`;
+                                const url = computeAttachURL(mb_toc_numbers, artistName, releaseName);
+                                const mbId = $(`#${torrentId}_disc${discNumber}`);
                                 if (found) {
-                                    html = `${html}<img src="${CHECK_IMAGE}" />`;
-                                }
+                                    mbId.css({
+                                        'padding-right': '15px',
+                                        'background': `no-repeat right/6% url("${CHECK_IMAGE}")`,
+                                    });
+                                };
                                 LOGGER.debug(`#${torrentId}_disc${discNumber}`);
-                                $(`#${torrentId}_disc${discNumber}`).html(html);
+                                const mbIdLink = $(`<a href="${url}" target="_blank" style="background: none">${discid}</a>`);
+                                mbIdLink.css({
+                                    'background': 'none',
+                                    'padding': '0',
+                                });
+                                mbId.append(mbIdLink);
                             }
                         );
+                        targetContainer.append(mbIdsEl);
                     });
                 });
         });
@@ -198,7 +208,7 @@ function gazellePageHandler() {
 // Common functions
 
 function computeAttachURL(mb_toc_numbers, artistName, releaseName) {
-    let url = `${'http://musicbrainz.org/cdtoc/attach?toc='}${mb_toc_numbers.join('%20')}&artist-name=${encodeURIComponent(
+    const url = `https://musicbrainz.org/cdtoc/attach?toc='${mb_toc_numbers.join('%20')}&artist-name=${encodeURIComponent(
         artistName
     )}&release-name=${encodeURIComponent(releaseName)}`;
     return url;
