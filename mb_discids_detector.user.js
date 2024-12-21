@@ -1,6 +1,6 @@
 ﻿// ==UserScript==
 // @name            Musicbrainz DiscIds Detector
-// @version         2024-12-21
+// @version         2024-12-21_01
 // @namespace       https://github.com/euamotubaina/musicbrainz-userscripts
 // @description     Generate MusicBrainz DiscIds from online EAC logs, and check existence in MusicBrainz database.
 // @downloadURL     https://raw.githubusercontent.com/euamotubaina/musicbrainz-userscripts/master/mb_discids_detector.user.js
@@ -208,10 +208,8 @@ function gazellePageHandler() {
 // Common functions
 
 function computeAttachURL(mb_toc_numbers, artistName, releaseName) {
-    const url = `https://musicbrainz.org/cdtoc/attach?toc='${mb_toc_numbers.join('%20')}&artist-name=${encodeURIComponent(
-        artistName
-    )}&release-name=${encodeURIComponent(releaseName)}`;
-    return url;
+    return `https://musicbrainz.org/cdtoc/attach?toc=${mb_toc_numbers.join('%20')}&artist-name=${
+        encodeURIComponent(artistName)}&release-name=${encodeURIComponent(releaseName)}`;
 }
 
 function analyze_log_files(log_files) {
