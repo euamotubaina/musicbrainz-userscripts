@@ -1,6 +1,6 @@
 ﻿// ==UserScript==
 // @name            Musicbrainz DiscIds Detector
-// @version         2024-12-28
+// @version         2024-12-28_01
 // @namespace       github.com/euamotubaina/musicbrainz-userscripts
 // @description     Generate MusicBrainz DiscIds from online EAC logs, and check existence in MusicBrainz database.
 // @downloadURL     https://raw.githubusercontent.com/euamotubaina/musicbrainz-userscripts/master/mb_discids_detector.user.js
@@ -14,7 +14,7 @@
 // @require         https://code.jquery.com/jquery-3.7.1.min.js
 // @require         http://pajhome.org.uk/crypt/md5/sha1.js
 // @require         https://raw.githubusercontent.com/euamotubaina/musicbrainz-userscripts/master/lib/logger.js
-// @icon            https://raw.githubusercontent.com/euamotubaina/musicbrainz-userscripts/master/assets/images/Musicbrainz_import_logo.png
+// @icon            http://wiki.musicbrainz.org/-/images/3/3d/Musicbrainz_logo.png
 // ==/UserScript==
 
 // prevent JQuery conflicts, see http://wiki.greasespot.net/@grant
