@@ -50,15 +50,15 @@ function gazellePageHandler() {
 
     // Parse each torrent
     $('tr.group_torrent')
-        .filter(() => $(this).attr('id'))
-        .each(() => {
+        .filter(function () { return $(this).attr('id') })
+        .each(function () {
             const torrentInfo = $(this).next();
 
             $(torrentInfo)
                 .find('a')
                 // Only investigate the ones with a log
-                .filter(index => $(this).text().match(/View\s+Log/i))
-                .each(() => {
+                .filter(function (index) { $(this).text().match(/View\s+Log/i) })
+                .each(function () {
                     LOGGER.debug('Log link', this);
                     if (
                         $(this).attr('onclick')?.match(/show_logs/)
@@ -99,10 +99,8 @@ function gazellePageHandler() {
                         LOGGER.debug('Number of disc found', discs.length);
                         const mbIdsEl = $(`<div class="mbdiscid_${torrentId}"></div>`);
                         check_and_display_discs(
-                            artistName,
-                            releaseName,
                             discs,
-                            function (mb_toc_numbers, discid, discNumber) {
+                            function (discNumber) {
                                 mbIdsEl.append(
                                     `${
                                         discs.length > 1 ? `<strong>Disc ${discNumber}: </strong>` : ''
@@ -165,22 +163,22 @@ function analyze_log_files(log_files) {
     return discs;
 }
 
-function check_and_display_discs(artistName, releaseName, discs, displayDiscHandler, displayResultHandler) {
+function check_and_display_discs(discs, displayDiscHandler, displayResultHandler) {
     // For each disc, check if it's in MusicBrainz database
     for (let i = 0; i < discs.length; i++) {
-        let entries = discs[i];
-        let discNumber = i + 1;
+        const entries = discs[i];
+        const discNumber = i + 1;
         if (entries.length > 0) {
-            let mb_toc_numbers = MBDiscid.calculate_mb_toc_numbers(entries);
-            let discid = MBDiscid.calculate_mb_discid(entries);
+            const mb_toc_numbers = MBDiscid.calculate_mb_toc_numbers(entries);
+            const discid = MBDiscid.calculate_mb_discid(entries);
             LOGGER.info(`Computed discid :${discid}`);
-            displayDiscHandler(mb_toc_numbers, discid, discNumber);
+            displayDiscHandler(discNumber);
 
             // Now check if this discid is known by MusicBrainz
             (function (discid, discNumber, mb_toc_numbers) {
-                let query = $.getJSON(`//musicbrainz.org/ws/2/discid/${discid}?cdstubs=no`);
+                const query = $.getJSON(`//musicbrainz.org/ws/2/discid/${discid}?cdstubs=no`);
                 query.done(function (data) {
-                    let existsInMusicbrainz = !('error' in data) && data.error != 'Not found';
+                    const existsInMusicbrainz = !('error' in data) && data.error != 'Not found';
                     displayResultHandler(mb_toc_numbers, discid, discNumber, existsInMusicbrainz);
                 });
                 query.fail(function () {
