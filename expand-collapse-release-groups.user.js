@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name          MusicBrainz: Expand/collapse release groups
 // @description	  See what's inside a release group without having to follow its URL. Also adds convenient edit links for it.
-// @version       2024-12-15
+// @version       2024-12-28
 // @namespace     github.com/euamotubaina/musicbrainz-userscripts
 // @author        Michael Wiencek <mwtuea@gmail.com>
 // @license       GPL
@@ -15,7 +15,7 @@
 // @exclude       http*://*.musicbrainz.org/label/*/*
 // @exclude       http*://*.musicbrainz.org/release-group/*/*
 // @exclude       http*://*.musicbrainz.org/series/*/*
-// @icon          https://raw.githubusercontent.com/euamotubaina/musicbrainz-userscripts/master/assets/images/Musicbrainz_import_logo.png
+// @icon          https://wiki.musicbrainz.org/-/images/3/3d/Musicbrainz_logo.png
 // ==/UserScript==
 
 const MBID_REGEX = /[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12}/;
@@ -32,57 +32,43 @@ for (const entity of releasesOrReleaseGroups) {
 }
 
 function inject_release_group_button(parent) {
-    let mbid = parent.querySelector('a').href.match(MBID_REGEX),
-        table = document.createElement('table');
+    const mbid = parent.querySelector('a').href.match(MBID_REGEX);
+    const table = document.createElement('table');
 
     table.style.marginTop = '1em';
     table.style.marginLeft = '1em';
     table.style.paddingLeft = '1em';
 
-    let button = create_button(
+    const button = create_button(
         `/ws/2/release?release-group=${mbid}&limit=100&inc=media&fmt=json`,
-        function (toggled) {
-            if (toggled) parent.appendChild(table);
-            else parent.removeChild(table);
-        },
-        function (json) {
-            parse_release_group(json, mbid, table);
-        },
-        function (status) {
-            table.innerHTML = `<tr><td style="color: #f00;">Error loading release group (HTTP status ${status})</td></tr>`;
-        }
+        toggled => toggled ? parent.appendChild(table) : parent.removeChild(table),
+        json => parse_release_group(json, mbid, table),
+        status => table.innerHTML = `<tr><td style="color: #f00;">Error loading release group (HTTP status ${status})</td></tr>`
     );
 
     parent.insertBefore(button, parent.firstChild);
 }
 
 function inject_release_button(parent, _table_parent, _table, _mbid) {
-    let mbid = _mbid || parent.querySelector('a').href.match(MBID_REGEX),
-        table = _table || document.createElement('table');
-    let table_parent = _table_parent || parent; // fallback for pages where we do not inject the release groups
+    const mbid = _mbid || parent.querySelector('a').href.match(MBID_REGEX);
+    const table = _table || document.createElement('table');
+    const table_parent = _table_parent || parent; // fallback for pages where we do not inject the release groups
 
     table.style.paddingLeft = '1em';
 
-    let button = create_button(
+    const button = create_button(
         `/ws/2/release/${mbid}?inc=media+recordings+artist-credits&fmt=json`,
-        function (toggled) {
-            if (toggled) table_parent.appendChild(table);
-            else table_parent.removeChild(table);
-        },
-        function (json) {
-            parse_release(json, table);
-        },
-        function (status) {
-            table.innerHTML = `<tr><td style="color: #f00;">Error loading release (HTTP status ${status})</td></tr>`;
-        }
+        toggled => toggled ? table_parent.appendChild(table) : table_parent.removeChild(table),
+        json => parse_release(json, table),
+        status => table.innerHTML = `<tr><td style="color: #f00;">Error loading release (HTTP status ${status})</td></tr>`
     );
 
     parent.insertBefore(button, parent.childNodes[0]);
 }
 
 function create_button(url, dom_callback, success_callback, error_callback) {
-    let button = document.createElement('span'),
-        toggled = false;
+    const button = document.createElement('span');
+    let toggled = false;
 
     button.innerHTML = '&#9654;';
     button.style.cursor = 'pointer';
@@ -91,10 +77,9 @@ function create_button(url, dom_callback, success_callback, error_callback) {
 
     button.addEventListener(
         'mousedown',
-        function () {
+        () => {
             toggled = !toggled;
-            if (toggled) button.innerHTML = '&#9660;';
-            else button.innerHTML = '&#9654;';
+            toggled ? button.innerHTML = '&#9660;' : button.innerHTML = '&#9654;';
             dom_callback(toggled);
         },
         false
@@ -102,12 +87,12 @@ function create_button(url, dom_callback, success_callback, error_callback) {
 
     button.addEventListener(
         'mousedown',
-        function () {
-            let this_event = arguments.callee;
+        () => {
+            const this_event = arguments.callee;
             button.removeEventListener('mousedown', this_event, false);
-            let req = new XMLHttpRequest();
+            const req = new XMLHttpRequest();
 
-            req.onreadystatechange = function () {
+            req.onreadystatechange = () => {
                 if (req.readyState != 4) return;
 
                 if (req.status == 200 && req.responseText) {
@@ -115,7 +100,7 @@ function create_button(url, dom_callback, success_callback, error_callback) {
                 } else {
                     button.addEventListener(
                         'mousedown',
-                        function () {
+                        () => {
                             button.removeEventListener('mousedown', arguments.callee, false);
                             button.addEventListener('mousedown', this_event, false);
                         },
@@ -135,8 +120,8 @@ function create_button(url, dom_callback, success_callback, error_callback) {
 }
 
 function format_time(ms) {
-    let ts = ms / 1000,
-        s = Math.round(ts % 60);
+    const ts = ms / 1000;
+    const s = Math.round(ts % 60);
     return `${Math.floor(ts / 60)}:${s >= 10 ? s : `0${s}`}`;
 }
 
@@ -145,23 +130,22 @@ function parse_release_group(json, mbid, table) {
     table.innerHTML = '';
 
     for (const release of releases) {
-        let media = {},
-            tracks = [],
-            formats = [];
+        const media = {};
+        let tracks = [];
+        let formats = [];
 
         for (const medium of release.media) {
-            let format = medium.format,
-                count = medium['track-count'];
+            const format = medium.format;
+            const count = medium['track-count'];
             if (format) {
-                format in media ? (media[format] += 1) : (media[format] = 1);
+                format in media ? media[format] += 1 : media[format] = 1;
             }
             tracks.push(count);
         }
 
-        for (let format in media) {
-            let count = media[format];
-            if (count > 1) formats.push(`${count.toString()}&#215;${format}`);
-            else formats.push(format);
+        for (const format in media) {
+            const count = media[format];
+            count > 1 ? formats.push(`${count.toString()}&#215;${format}`) : formats.push(format);
         }
 
         release.tracks = tracks.join(' + ');
@@ -175,13 +159,13 @@ function parse_release_group(json, mbid, table) {
     });
 
     for (const release of releases) {
-        let track_tr = document.createElement('tr'),
-            track_td = document.createElement('td'),
-            track_table = document.createElement('table'),
-            format_td = document.createElement('td'),
-            tr = document.createElement('tr'),
-            td = document.createElement('td'),
-            a = createLink(`/release/${release.id}`, release.title);
+        const track_tr = document.createElement('tr');
+        const track_td = document.createElement('td');
+        const track_table = document.createElement('table');
+        const format_td = document.createElement('td');
+        const tr = document.createElement('tr');
+        const td = document.createElement('td');
+        const a = createLink(`/release/${release.id}`, release.title);
 
         track_td.colSpan = 6;
         track_table.style.width = '100%';
@@ -196,7 +180,7 @@ function parse_release_group(json, mbid, table) {
         format_td.innerHTML = release.formats;
         tr.appendChild(format_td);
 
-        let columns = [release.tracks, release.date || '', release.country || '', release.status || ''];
+        const columns = [release.tracks, release.date || '', release.country || '', release.status || ''];
         for (const column of columns) {
             tr.appendChild(createElement('td', column));
         }
@@ -205,8 +189,8 @@ function parse_release_group(json, mbid, table) {
         table.appendChild(track_tr);
     }
 
-    let bottom_tr = document.createElement('tr'),
-        bottom_td = document.createElement('td');
+    const bottom_tr = document.createElement('tr');
+    const bottom_td = document.createElement('td');
 
     bottom_td.colSpan = 6;
     bottom_td.style.padding = '1em';
@@ -222,29 +206,29 @@ function parse_release_group(json, mbid, table) {
 }
 
 function parse_release(json, table) {
-    let media = json.media;
+    const media = json.media;
     table.innerHTML = '';
 
     for (let i = 0; i < media.length; i++) {
-        let medium = media[i],
-            format = medium.format ? `${medium.format} ${i + 1}` : `Medium ${i + 1}`;
+        const medium = media[i];
+        const format = medium.format ? `${medium.format} ${i + 1}` : `Medium ${i + 1}`;
 
         table.innerHTML += `<tr class="subh"><td colspan="4">${format}</td></tr>`;
 
         for (let j = 0; j < medium.tracks.length; j++) {
-            let track = medium.tracks[j],
-                recording = track.recording,
-                disambiguation = recording.disambiguation ? ` (${recording.disambiguation})` : '',
-                length = track.length ? format_time(track.length) : '?:??',
-                artist_credit = track['artist-credit'] || track.recording['artist-credit'],
-                tr = document.createElement('tr');
+            const track = medium.tracks[j];
+            const recording = track.recording;
+            const disambiguation = recording.disambiguation ? ` (${recording.disambiguation})` : '';
+            const length = track.length ? format_time(track.length) : '?:??';
+            const artist_credit = track['artist-credit'] || track.recording['artist-credit'];
+            const tr = document.createElement('tr');
 
             tr.appendChild(createElement('td', j + 1));
-            let title_td = createElement('td', disambiguation);
+            const title_td = createElement('td', disambiguation);
             title_td.insertBefore(createLink(`/recording/${recording.id}`, recording.title), title_td.firstChild);
             tr.appendChild(title_td);
             tr.appendChild(createElement('td', length));
-            let ac_td = document.createElement('td');
+            const ac_td = document.createElement('td');
             ac_td.appendChild(createAC(artist_credit));
             tr.appendChild(ac_td);
 
@@ -252,8 +236,8 @@ function parse_release(json, table) {
         }
     }
 
-    let bottom_tr = document.createElement('tr'),
-        bottom_td = document.createElement('td');
+    const bottom_tr = document.createElement('tr');
+    const bottom_td = document.createElement('td');
 
     bottom_td.colSpan = 4;
     bottom_td.style.padding = '1em';
@@ -271,11 +255,11 @@ function parse_release(json, table) {
 }
 
 function createAC(artist_credit_array) {
-    let span = document.createElement('span');
+    const span = document.createElement('span');
 
     for (const credit of artist_credit_array) {
-        let artist = credit.artist,
-            link = createLink(`/artist/${artist.id}`, credit.name || artist.name);
+        const artist = credit.artist;
+        const link = createLink(`/artist/${artist.id}`, credit.name || artist.name);
 
         link.setAttribute('title', artist['sort-name']);
         span.appendChild(link);
@@ -286,19 +270,19 @@ function createAC(artist_credit_array) {
 }
 
 function createElement(name, text) {
-    let element = document.createElement(name);
+    const element = document.createElement(name);
     element.textContent = text;
     return element;
 }
 
 function createLink(href, text) {
-    let element = createElement('a', text);
+    const element = createElement('a', text);
     element.href = href;
     return element;
 }
 
 function createNewTabLink(href, text) {
-    let link = createLink(href, text);
+    const link = createLink(href, text);
     link.target = '_blank';
     return link;
 }
