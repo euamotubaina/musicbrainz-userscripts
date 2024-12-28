@@ -1,13 +1,11 @@
 ﻿// ==UserScript==
 // @name            Musicbrainz DiscIds Detector
-// @version         2024-12-21_01
-// @namespace       https://github.com/euamotubaina/musicbrainz-userscripts
+// @version         2024-12-28
+// @namespace       github.com/euamotubaina/musicbrainz-userscripts
 // @description     Generate MusicBrainz DiscIds from online EAC logs, and check existence in MusicBrainz database.
 // @downloadURL     https://raw.githubusercontent.com/euamotubaina/musicbrainz-userscripts/master/mb_discids_detector.user.js
 // @updateURL       https://raw.githubusercontent.com/euamotubaina/musicbrainz-userscripts/master/mb_discids_detector.user.js
-// @match           http*://avaxhome.ws/music/*
 // @match           http*://orpheus.network/torrents.php?id=*
-// @match           http*://passtheheadphones.me/torrents.php?id=*
 // @match           http*://redacted.sh/torrents.php?id=*
 // @match           http*://lztr.us/torrents.php?id=*
 // @match           http*://lztr.me/torrents.php?id=*
@@ -27,77 +25,24 @@ LOGGER.setLevel('info');
 const CHECK_IMAGE =
     'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/gD+AP7rGNSCAAAACXBIWXMAAABIAAAASABGyWs+AAAACXZwQWcAAAAQAAAAEABcxq3DAAADKklEQVQ4y32TS2hcZRiGn/8/Z87MNNc2zczEmptO0jSXagJtXCjWhhSEXpCI4EYENy6KG8FFBYtgEbzQ4k5QqNp2VyMtJVGpRU0tGDNoQxvrmCbkMslkSJrJXM6cOef8v4ukQqX4wbP5eL/327wv/M/Em+qNeFO9ASDEwzUPrM+fP8dqOhXqeGJ/f21ddCAYCsfRyFLJvru2mvnh9mTil8am1uJLQ8ceNOhoa+XC8HfMJm81x1q63glV179oBMLVhpQYEiQKzy0VNtZWLs9OT53s6X3qrxPHX+bSyNVNgyujV8lvrDXG2vZ/7oWig64nAY0hwZCCgIRwUGBJRSGbvp6cHH91R33078ODTyNOnXqPxcRl88ibX5wuBJuP5x2BVhop2PwuBA01kn2tJo4HtxfL5DIzZ7+/8MHrOx7tcMQ3I9dwnWKvF+kfTdlVEc/10f59A0HAgMEui90xgxvTLn8u+9SYhXUnNX60smr7z7Jx3wG8UOSZhUI4spJTrGwo0lssZxVSQlOdZGrJYyzpks4qlvLBWhWMHOgb7Mfsq4PfXOvx+bwgk/WxSwrfUwRNQSgAh7oCFB3N1xNllrMK04A5V7PLMOOvCSFMgFzJl6u2Jl8Gx9XkCppSWdEWNWiPGZy9XmIs6WJKKHuasq+p3qlkOwhz9B54dnbOkorOR0yG9gZJ3fP5cNTm4J4Akws+FyfKOK5GCFAatm/T4ObmB7RWxt74k9hrC0LVtLwwmw2FwyY8323hK2iLGnz2U4lMTiHvR04IGiqLxbrS7x/np3NJozoEmcTFTLTz2U7bivTcXNSsFxWHeyyGE2XGZ7x/j7WGyhA0W3e/LU58eiY1N+0IgLc++or1VLLb6hz6MmPGe/M2NFTBzIpH3lYoX6MQhC1NkzV/p2Jp5JX6eP+vn7wxsJnEXXUVnL6T59K7J/u2tR96365oey7nVQTKnsDzNFr5hETBq3ZmbrB47cS5M2+PdTbHmJpL89+OGbv3dLc81n/kWLih+yDhnTGtEcpeXXHSUz/OJ64M3/ojMS3BUw9rI2BsIUxBsLYyEJYC1nNuqawpARrwtwDgHxTwbTT5CxY9AAAALnpUWHRjcmVhdGUtZGF0ZQAAeNozMjCw0DWw0DUyCTEwsDIyszIw0jUwtTIwAABB3gURQfNnBAAAAC56VFh0bW9kaWZ5LWRhdGUAAHjaMzIwsNA1sNA1MggxNLMyNLYyNtM1MLUyMAAAQgUFF56jVzIAAAAASUVORK5CYII%3D';
 
-$(document).ready(function () {
+$(document).ready(() => {
     if (window.location.host.match(/orpheus\.network|redacted\.sh|passtheheadphones\.me|lztr\.(us|me)|mutracker\.org|notwhat\.cd/)) {
-        LOGGER.info('Gazelle site detected');
+        LOGGER.debug('Gazelle site detected');
         gazellePageHandler();
-    } else if (window.location.host.match(/avaxhome\.ws/)) {
-        avaxHomePageHandler();
     }
 });
 
-function avaxHomePageHandler() {
-    // Find artist and release titles
-    let artistName = '';
-    let releaseName = '';
-    let m = $('div.title h1')
-        .text()
-        .match(/(.*) (?:-|–) (.*)( \(\d{4}\))?/);
-    if (m) {
-        artistName = m[1];
-        releaseName = m[2];
-    }
-    if (artistName == 'VA') artistName = 'Various Artists';
-
-    // Find and analyze EAC log
-    $('div.spoiler')
-        .filter(function () {
-            return $(this)
-                .find('a')
-                .text()
-                .match(/(EAC|log)/i);
-        })
-        .find('div')
-        .each(function () {
-            let $eacLog = $(this);
-            let discs = analyze_log_files($eacLog);
-
-            // Check and display
-            check_and_display_discs(
-                artistName,
-                releaseName,
-                discs,
-                function (mb_toc_numbers, discid, discNumber) {
-                    $eacLog
-                        .parents('div.spoiler')
-                        .prevAll('div.center:first')
-                        .append(
-                            `<br /><strong>${discs.length > 1 ? `Disc ${discNumber}: ` : ''}MB DiscId </strong><span id="${discid}" />`
-                        );
-                },
-                function (mb_toc_numbers, discid, discNumber, found) {
-                    let url = computeAttachURL(mb_toc_numbers, artistName, releaseName);
-                    let html = `<a href="${url}">${discid}</a>`;
-                    if (found) {
-                        html = `${html}<img src="${CHECK_IMAGE}" />`;
-                    }
-                    $(`#${discid.replace('.', '\\.')}`).html(html);
-                }
-            );
-        });
-}
-
 function gazellePageHandler() {
-    let serverHost = window.location.host;
+    const serverHost = window.location.host;
 
     // Determine Artist name and Release title
-    let titleAndArtists = $('#content div.thin h2:eq(0)').text();
+    const titleAndArtists = $('#content div.thin h2:eq(0)').text();
     let pattern = /(.*) - (.*) \[.*\] \[.*/;
     if (serverHost.match(/orpheus/)) {
         pattern = /(.*) [-–] (.*) \[.*\]( \[.*)?/;
     }
     let artistName, releaseName;
-    if ((m = titleAndArtists.match(pattern))) {
+    if (m = titleAndArtists.match(pattern)) {
         artistName = m[1];
         releaseName = m[2];
     }
@@ -105,28 +50,19 @@ function gazellePageHandler() {
 
     // Parse each torrent
     $('tr.group_torrent')
-        .filter(function () {
-            return $(this).attr('id');
-        })
-        .each(function () {
-            let torrentInfo = $(this).next();
+        .filter(() => $(this).attr('id'))
+        .each(() => {
+            const torrentInfo = $(this).next();
 
             $(torrentInfo)
                 .find('a')
                 // Only investigate the ones with a log
-                .filter(function (index) {
-                    return $(this)
-                        .text()
-                        .match(/View\s+Log/i);
-                })
-                .each(function () {
+                .filter(index => $(this).text().match(/View\s+Log/i))
+                .each(() => {
                     LOGGER.debug('Log link', this);
                     if (
-                        $(this)
-                            .attr('onclick')
-                            ?.match(/show_logs/) ||
-                        $(this)
-                            .hasClass('view-riplog')
+                        $(this).attr('onclick')?.match(/show_logs/)
+                        || $(this).hasClass('view-riplog')
                     ) {
                         if (window.location.host.match(/orpheus/)) {
                             LOGGER.debug('Orpheus');
@@ -137,37 +73,29 @@ function gazellePageHandler() {
                         }
                     }
                     // LzTR
-                    else if (
-                        $(this)
-                            .attr('onclick')
-                            .match(/get_log/)
-                    ) {
+                    else if ($(this).attr('onclick').match(/get_log/)) {
                         LOGGER.debug('LzTR');
                         var logAction = 'log_ajax';
                     }
                     // NotWhat.CD
-                    else if (
-                        $(this)
-                            .attr('onclick')
-                            .match(/show_log/)
-                    ) {
+                    else if ($(this).attr('onclick').match(/show_log/)) {
                         LOGGER.debug('NotWhat.CD');
                         var logAction = 'viewlog';
                     } else {
                         return true;
                     }
-                    let targetContainer = $(this).parents('.linkbox');
-                    let torrentId = window.location.host.match(/orpheus/)
+                    const targetContainer = $(this).parents('.linkbox');
+                    const torrentId = window.location.host.match(/orpheus/)
                         ? targetContainer.data('id')
                         : /(show_logs|get_log|show_log)\('(\d+)/.exec($(this).attr('onclick'))[2];
-                    let logUrl = `/torrents.php?action=${logAction}&torrentid=${torrentId}`;
+                    const logUrl = `/torrents.php?action=${logAction}&torrentid=${torrentId}`;
                     LOGGER.info('Log URL: ', logUrl);
                     LOGGER.debug('targetContainer: ', targetContainer);
 
                     // Get log content
                     $.get(logUrl, function (data) {
                         LOGGER.debug('Log content', $(data).find('pre'));
-                        let discs = analyze_log_files($(data).find('pre'));
+                        const discs = analyze_log_files($(data).find('pre'));
                         LOGGER.debug('Number of disc found', discs.length);
                         const mbIdsEl = $(`<div class="mbdiscid_${torrentId}"></div>`);
                         check_and_display_discs(
@@ -216,7 +144,7 @@ function analyze_log_files(log_files) {
     let discs = [];
     $.each(log_files, function (i, log_file) {
         let discsInLog = MBDiscid.log_input_to_entries($(log_file).text());
-        for (var i = 0; i < discsInLog.length; i++) {
+        for (let i = 0; i < discsInLog.length; i++) {
             discs.push(discsInLog[i]);
         }
     });
@@ -277,16 +205,16 @@ var MBDiscid = (function () {
 
     this.toc_entry_matcher = new RegExp(
         '^\\s*' +
-            '(\\d+)' + // 1 - track number
-            '\\s*\\|\\s*' +
-            '([0-9:.]+)' + // 2 - time start
-            '\\s*\\|\\s*' +
-            '([0-9:.]+)' + // 3 - time length
-            '\\s*\\|\\s*' +
-            '(\\d+)' + // 4 - start sector
-            '\\s*\\|\\s*' +
-            '(\\d+)' + // 5 - end sector
-            '\\s*$'
+        '(\\d+)' + // 1 - track number
+        '\\s*\\|\\s*' +
+        '([0-9:.]+)' + // 2 - time start
+        '\\s*\\|\\s*' +
+        '([0-9:.]+)' + // 3 - time length
+        '\\s*\\|\\s*' +
+        '(\\d+)' + // 4 - start sector
+        '\\s*\\|\\s*' +
+        '(\\d+)' + // 5 - end sector
+        '\\s*$'
     );
     this.log_input_to_entries = function (text) {
         let discs = [];
@@ -400,7 +328,7 @@ var MBDiscid = (function () {
             return input;
         };
 
-        let mb_toc_numbers = calculate_mb_toc_numbers(entries);
+        const mb_toc_numbers = calculate_mb_toc_numbers(entries);
         let message = '';
         let first_track = mb_toc_numbers[0];
         let last_track = mb_toc_numbers[1];
